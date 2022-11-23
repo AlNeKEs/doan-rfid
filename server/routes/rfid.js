@@ -10,8 +10,7 @@ const { Server } = require("socket.io");
 const rfidServer = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
+      origin: "*"
     },
   });
   client.on("connect", function () {
@@ -26,17 +25,21 @@ const rfidServer = (server) => {
       console.log(`user disconnect `);
     });
     socket.on("fromclient", function (data) {
-      console.log(data);
-      if (data.message == "add") {
-        client.publish(
-          "doan/rfid/subcribetopic",
-          JSON.stringify({ message: "add" })
-        );
-      } else if (data.message == "scan") {
-        client.publish(
-          "doan/rfid/subcribetopic",
-          JSON.stringify({ message: "scan" })
-        );
+      switch (data.message) {
+        case "add":
+          client.publish(
+            "doan/rfid/subcribetopic",
+            JSON.stringify({ message: "add" })
+          );
+          break;
+        case "scan":
+          client.publish(
+            "doan/rfid/subcribetopic",
+            JSON.stringify({ message: "scan" })
+          );
+          break;
+        default:
+          break;
       }
     });
 
